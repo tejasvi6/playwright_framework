@@ -1,10 +1,19 @@
-from playwright.sync_api import sync_playwright
 from pages.login_page import LoginPage
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False)
-    page = browser.new_page()
+from pages.dashboard_page import DashboardPage
+from config.config import USERNAME, PASSWORD, INVALID_PASSWORD
+def test_valid_login(page):
     login = LoginPage(page)
-    login.login()
-    input("Press Enter to close browser...")
-    browser.close()
+    login.login(USERNAME,PASSWORD)
+
+    dashboard = DashboardPage(page)
+    dashboard.verify_dashboard()
+
+def test_invalid_login(page):
+    login = LoginPage(page)
+    login.login(USERNAME, INVALID_PASSWORD)
+    login.verify_invalid_credentials()
+    input("Press Enter to continue...")
+   
+
+    
 
